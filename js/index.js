@@ -3,6 +3,7 @@ var correctA = [];
 var incorrectA = [];
 var possibleA = []; //may need to change to null
 var questionsh = $('.card-title');
+var randomNUm = Math.floor(Math.random() * 4);
 
 var populateCards = function() {
 	for (var i = 0; i <questions.length; i++) {
@@ -11,23 +12,47 @@ var populateCards = function() {
 	}
 }
 
-var populateAnswers = function () {
-	for(var i = 0; i<correctA.length;i++){
+var index = function(li) {
+  var temp = []
+  for (var i = 0; i < li.length; i++){
+    temp.push([li[i],i])
+  }
+  temp = temp.sort(function(a,b){return(a[0]-b[0])})
+  for (var i = 0; i < temp.length; i++){
+    temp[i].push(i)
+  }
+  temp = temp.sort(function(a,b){return(a[1] - b[1])})
+  var output = []
+  for (var i = 0; i < temp.length; i++){
+    output.push(temp[i][2])
+  }
+  return(output);
+}
+
+var RandomIntArray = function(intN){
+  li = []
+  for (var i = 0; i < intN; i++){
+    li.push(Math.random())
+  }
+  return(index(li));
+}
+
+var getPossibleA = function () {
+	for (var i = 0; i < correctA.length; i++) {
+		incorrectA[i].push(correctA[i]);
 		possibleA.push(incorrectA[i]);
-		possibleA[i].push(correctA[i]);	
 	}
-	console.log(possibleA[1]);
-	//shuffle
-	for(var i= 0;i<possibleA.length;i++){
-		var change;
-		for(var j = possibleA.length-1;j>0;j--) {
-			var randomNUm = Math.floor(Math.random() * (j + 1));
-			change = possibleA[i][j];
-			possibleA[i][j] = possibleA[i][randomNUm];
-			possibleA[i][randomNUm] = change;
-		}
-	}
-	console.log(possibleA[1]);
+}
+
+var populateAnswers = function () {
+	getPossibleA();
+
+	var IntArray = RandomIntArray(4);
+	$('#customRadio1').text(possibleA[0][IntArray[0]]);
+	console.log(possibleA[0][IntArray[0]])
+	$('#customRadio2').text(possibleA[0][IntArray[1]]);
+	$('#customRadio3').text(possibleA[0][IntArray[2]]);
+	$('#customRadio4').text(possibleA[0][IntArray[3]]);
 }
 
 $(document).ready(function() {
@@ -41,6 +66,7 @@ $(document).ready(function() {
 		});
 		populateCards();
 		populateAnswers();
+
 	});
 });
 
